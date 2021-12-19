@@ -4715,4 +4715,18 @@ void TWPartitionManager::UnMount_System_Partitions(void) {
 		UnMount_Main_Partitions();
 	}
 }
+
+void TWPartitionManager::Refresh_Mounting_Info(void) {
+	if (!DataManager::GetIntValue("tw_mount_system_ro")) {
+		std::vector<TWPartition*>::iterator iter;
+		string command;
+		for (iter = Partitions.begin(); iter != Partitions.end(); iter++) {
+			if ((*iter)->Is_Super) {
+				(*iter)->Change_Mount_Read_Only(false);
+				command = "blockdev --setrw /dev/block/mapper/" + Get_Bare_Partition_Name((*iter)->Get_Mount_Point());
+				TWFunc::Exec_Cmd(command, false);
+			}
+		}
+	}
+}
 //*
