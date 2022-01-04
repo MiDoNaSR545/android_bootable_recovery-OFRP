@@ -3839,7 +3839,7 @@ int TWPartitionManager::Run_OTA_Survival_Backup(bool adbbackup)
   } 
   else 
   {
-  	#ifdef OF_NO_MIUI_OTA_VENDOR_BACKUP
+  	#ifdef OF_NO_INCREMENTAL_OTA_VENDOR_BACKUP
     	// (old Xiaomi devices) - we are not going to backup vendor_image/vendor
   	#else
   	TWPartition *vend_image = PartitionManager.Find_Partition_By_Path("/vendor_image");

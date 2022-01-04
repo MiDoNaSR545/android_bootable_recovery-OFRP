@@ -910,11 +910,11 @@
 		<string name="magisk_not_found_2">și să instalați Magisk preinstalat?</string>
 		<string name="magisk_not_found_3"/>
 		
-		<!-- MIUI OTA -->
+		<!-- Incremental OTA -->
 		<string name="fox_ota_settings">Setări OTA</string>
-		<string name="fox_miui_ota_on">Activați OTA</string>
-		<string name="fox_ota_on">Activați OTA</string>
+		<string name="fox_ota_on">Activați OTA incrementală</string>
 		<string name="fox_patch_rom">Patch ROM</string>
+		<string name="fox_ota_menu_header">OTA incrementală</string>
 		<string name="fox_ota_lite">OTA şi ROM</string>
 		
 		<!-- About -->

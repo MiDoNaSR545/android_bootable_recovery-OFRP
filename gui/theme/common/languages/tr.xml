@@ -910,11 +910,11 @@
 		<string name="magisk_not_found_2">ve önceden hazırlanmış Magisk'i kurmak ister misin?</string>
 		<string name="magisk_not_found_3"/>
 		
-		<!-- MIUI OTA -->
+		<!-- Incremental OTA -->
 		<string name="fox_ota_settings">OTA Ayarları</string>
-		<string name="fox_miui_ota_on">OTA'yı Etkinleştir</string>
-		<string name="fox_ota_on">OTA'yı Etkinleştir</string>
+		<string name="fox_ota_on">Artımlı OTA'yı Etkinleştir</string>
 		<string name="fox_patch_rom">ROM'u Yamala</string>
+		<string name="fox_ota_menu_header">Artımlı OTA</string>
 		<string name="fox_ota_lite">OTA &amp; ROM</string>
 		
 		<!-- About -->

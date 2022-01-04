@@ -910,11 +910,11 @@
 		<string name="magisk_not_found_2">e installare Magisk incluso nella recovery?</string>
 		<string name="magisk_not_found_3"/>
 		
-		<!-- MIUI OTA -->
+		<!-- Incremental OTA -->
 		<string name="fox_ota_settings">Impostazioni OTA</string>
-		<string name="fox_miui_ota_on">Abilita OTA</string>
-		<string name="fox_ota_on">Abilita OTA</string>
+		<string name="fox_ota_on">Abilita OTA incrementale</string>
 		<string name="fox_patch_rom">Patch ROM</string>
+		<string name="fox_ota_menu_header">OTA incrementale</string>
 		<string name="fox_ota_lite">OTA &amp; ROM</string>
 		
 		<!-- About -->

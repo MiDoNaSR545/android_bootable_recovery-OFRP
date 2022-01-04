@@ -2347,7 +2347,7 @@ void TWFunc::Welcome_Message(void)
     gui_print_color("error", "\n*** CONFIDENTIAL ALPHA. NOT FOR RELEASE!! ***\n\n");
 #endif
 
-#if defined(OF_DISABLE_MIUI_SPECIFIC_FEATURES) || defined(OF_TWRP_COMPATIBILITY_MODE)
+#if defined(OF_DISABLE_INCREMENTAL_OTA_FEATURES) || defined(OF_TWRP_COMPATIBILITY_MODE)
     LOGINFO(" [MIUI-specific features not enabled]\n");
 #endif
     

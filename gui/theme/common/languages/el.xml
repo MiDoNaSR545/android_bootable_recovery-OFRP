@@ -910,11 +910,11 @@
 		<string name="magisk_not_found_2">και να εγκατ. το προεγκ. Magisk;</string>
 		<string name="magisk_not_found_3"/>
 		
-		<!-- MIUI OTA -->
+		<!-- Incremental OTA -->
 		<string name="fox_ota_settings">OTA Ρυθμίσεις</string>
-		<string name="fox_miui_ota_on">Ενεργοποίηση OTA</string>
-		<string name="fox_ota_on">Ενεργοποίηση OTA</string>
+		<string name="fox_ota_on">Ενεργοποίηση αυξητικών OTA</string>
 		<string name="fox_patch_rom">Προσαρμογή της ROM</string>
+		<string name="fox_ota_menu_header">Αυξητική ΟΤΑ</string>
 		<string name="fox_ota_lite">OTA &amp; ROM</string>
 		
 		<!-- About -->

@@ -787,7 +787,7 @@
 		<string name="fox_incremental_ota_compatibility_true">Incremental package is compatible</string>
 		<string name="fox_incremental_ota_status_enabled">Support Incremental package status: Enabled</string>
 		<string name="fox_incremental_ota_status_disabled">Support Incremental package status: Disabled</string>
-		<string name="fox_incremental_package_detected">Detected Incremental package '{1}'</string>
+		<string name="fox_incremental_package_detected">Detected {1} Incremental package '{2}'</string>
 		<string name="fox_survival_does_not_exist">OTA Survival does not exist! Please flash a full ROM first!</string>
 		<string name="fox_install_detecting">Detecting Current Package</string>
 		<string name="fox_install_standard_detected">- Detected Standard Package</string>
@@ -943,11 +943,11 @@
 		<string name="magisk_not_found_2">and install prebuilt Magisk?</string>
 		<string name="magisk_not_found_3"></string>
 		
-		<!-- MIUI OTA -->
+		<!-- Incremental OTA -->
 		<string name="fox_ota_settings">OTA Settings</string>
-		<string name="fox_miui_ota_on">Enable OTA</string>
-		<string name="fox_ota_on">Enable OTA</string>
+		<string name="fox_ota_on">Enable incremental OTA</string>
 		<string name="fox_patch_rom">Patch ROM</string>
+		<string name="fox_ota_menu_header">Incremental OTA</string>
 		<string name="fox_ota_lite">OTA &amp; ROM</string>
 		
 		<!-- About -->
@@ -1012,9 +1012,9 @@
 		<string name="fox_ota_msg_custom">Enabled custom ROM mode</string>
 		<string name="fox_ota_msg_reflash">Please flash full ROM!</string>
 		<string name="fox_advanced_stock_recovery">Aggressive stock recovery deactivation</string>
-		<string name="fox_support_miui_ota_chk">Support OTA</string>
-		<string name="fox_include_system_survival_chk">Include system in OTA survival</string>
-		<string name="fox_verify_incremental_ota_signature_chk">Incremental OTA signature verification</string>
+		<string name="fox_include_system_survival_chk">Include System in OTA survival</string>
+		<string name="fox_include_super_survival_chk">Include Super in OTA survival</string>
+		<string name="fox_verify_incremental_ota_signature_chk">OTA signature verification (MIUI only)</string>
 		<string name="fox_dmverity_chk">Disable DM-Verity</string>
 		<string name="fox_forced_encryption_chk">Disable Forced Encryption</string>
 		<string name="FOX_DISABLE_OTA_AUTO_REBOOT_chk">Prevent auto reboot after installing OTA</string>

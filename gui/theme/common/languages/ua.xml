@@ -910,11 +910,11 @@
 		<string name="magisk_not_found_2">Увімкнути OTA</string>
 		<string name="magisk_not_found_3"/>
 		
-		<!-- MIUI OTA -->
+		<!-- Incremental OTA -->
 		<string name="fox_ota_settings">ОТА налаштування</string>
-		<string name="fox_miui_ota_on">Увімкнути OTA</string>
-		<string name="fox_ota_on">Увімкнути OTA</string>
+		<string name="fox_ota_on">Увімкнути інкрементний OTA</string>
 		<string name="fox_patch_rom">Patch ROM</string>
+		<string name="fox_ota_menu_header">Інкрементний OTA</string>
 		<string name="fox_ota_lite">OTA &amp; ROM</string>
 		
 		<!-- About -->
