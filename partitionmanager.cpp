@@ -4729,4 +4729,40 @@ void TWPartitionManager::Refresh_Mounting_Info(void) {
 		}
 	}
 }
+
+void TWPartitionManager::Update_data_props(void) {
+	Prepare_All_Super_Volumes();
+	usleep(32768);
+	TWPartition* ven = PartitionManager.Find_Partition_By_Path("/vendor");
+	TWPartition* odm = PartitionManager.Find_Partition_By_Path("/odm");
+	if (ven) ven->Mount(true);
+	if (odm) odm->Mount(true);
+
+	string Fstab_Path;
+	DataManager::SetValue(FOX_USE_F2FS_COMPRESSION, "0");
+	if (TWFunc::Find_Fstab(Fstab_Path)) {
+			std::string Name;
+			std::vector<std::string> Data;
+
+			if (TWFunc::read_file(Fstab_Path, Data) == 0) {
+				for (int index = 0; index < Data.size(); index++) {
+					Name = Data.at(index);
+
+					if (Name[0] == '#')
+						continue;
+
+					if (Name.find("fscompress") != string::npos)
+						DataManager::SetValue(FOX_USE_F2FS_COMPRESSION, "1");
+				}
+			} else LOGINFO("Unable to read file '%s'\n", Fstab_Path.c_str());
+
+	} else LOGINFO("Unable to parse vendor fstab\n");
+
+	Reset_Prop_From_Partition("external_storage.projid.enabled", "", ven, odm);
+	Reset_Prop_From_Partition("external_storage.casefold.enabled", "", ven, odm);
+	Reset_Prop_From_Partition("external_storage.sdcardfs.enabled", "", ven, odm);
+
+	if (ven) ven->UnMount(true);
+	if (odm) odm->UnMount(true);
+}
 //*

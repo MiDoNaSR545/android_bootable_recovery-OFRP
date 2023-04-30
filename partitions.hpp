@@ -443,6 +443,7 @@ public:
 	bool Unmap_Super_Devices();                                               // Unmap super devices in TWRP
 	bool Check_Pending_Merges();                                              // Check and run pending merges on data for VAB devices
 	void Refresh_Mounting_Info();                                             // Returns read/write access for dynamic partitions if necessary
+	void Update_data_props();  						  // Update some props required for data formatting
 
 #ifdef TW_HAS_MTP
 	bool is_MTP_Enabled(void);						  // returns whether MTP is already enabled

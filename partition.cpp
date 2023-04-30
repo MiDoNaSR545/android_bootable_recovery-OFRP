@@ -2582,6 +2582,13 @@ bool TWPartition::Wipe_RMRF() {
 bool TWPartition::Wipe_F2FS() {
 	std::string f2fs_command;
 
+	bool NeedPreserveFooter = true;
+	bool needs_casefold = false;
+  	bool needs_projid = false;
+  	bool needs_compression = false;
+
+	PartitionManager.Update_data_props();
+
 	if (!UnMount(true))
 		return false;
 
@@ -2598,11 +2605,6 @@ bool TWPartition::Wipe_F2FS() {
 		LOGINFO("mkfs.f2fs binary not found, using rm -rf to wipe.\n");
 		return Wipe_RMRF();
 	}
-
-	bool NeedPreserveFooter = true;
-	bool needs_casefold = false;
-  	bool needs_projid = false;
-  	bool needs_compression = false;
 
 	Find_Actual_Block_Device();
 	if (!Is_Present) {
@@ -2625,14 +2627,20 @@ bool TWPartition::Wipe_F2FS() {
 	char dev_sz_str[48];
 	sprintf(dev_sz_str, "%llu", (dev_sz / 4096));
 
-	if(needs_projid)
+	if(needs_projid) {
 		f2fs_command += " -O project_quota,extra_attr";
+		LOGINFO("Data formatting: needs_projid: true\n");
+	}
 
-	if(needs_casefold)
+	if(needs_casefold) {
 		f2fs_command += " -O casefold -C utf8";
+		LOGINFO("Data formatting: needs_casefold: true\n");
+	}
 
-	if(needs_compression)
-		f2fs_command += " -O compression,extra_attr";
+	if(needs_compression) {
+		f2fs_command += " -O compression -O extra_attr";
+		LOGINFO("Data formatting: needs_compression: true\n");
+	}
 
 	f2fs_command += " " + Actual_Block_Device + " " + dev_sz_str;
 
