@@ -1189,5 +1189,26 @@
 		<string name="reflash_twrp">Прошить текущий OrangeFox</string>
 		<string name="reflashing_twrp">Прошивка OrangeFox...</string>
 		<string name="reflash_twrp_complete">OrangeFox прошит</string>
+
+		<!-- Dynamic flashing -->
+		<string name="dynamic_flash_warn">Попытка прошить динамический раздел!</string>
+		<string name="dynamic_flash_resize_warn">Недостаточно места в разделе {1}. Попытка расширить его...</string>
+		<string name="dynamic_flash_fail">Неудалось расширить!</string>
+		<string name="dynamic_flash_nospace">Неудалось расширить. Недостаточно места в super!</string>
+		<string name="dynamic_flash_nolptools">Неудалось расширить. Не найден lptools!</string>
+		<string name="dynamic_flash_success">Раздел {1} был успешно расширен!</string>
+
+		<string name="dynamic_flash_gsi">Режим установки GSI</string>
+		<string name="dynamic_remove_other">Удаление ненужных для GSI динамических разделов...</string>
+		<string name="dynamic_flash_nospace_remove">Неудалось расширить. Недостаточно места в super! Попробуйте включить режим установки GSI.</string>
+
+		<string name="dynamic_convert_rw">Сделать образ r/w</string>
+		<string name="dynamic_convert_rw_info">Конвертирование образа в r/w...</string>
+		<string name="dynamic_convert_rw_nospace">Конвертирование неудалось! Недостаточно места на накопителе для конвертации образа!</string>
+		<string name="dynamic_convert_rw_nospace_info">Убедитесь, что ваше текущее хранилище с образом имеет хотя бы 1 ГБ свободного места!"</string>
+		<string name="dynamic_convert_rw_nobinary">Конвертирование неудалось! Ненайден resize2fs и/или e2fsck!</string>
+		<string name="dynamic_convert_rw_damaged">Конвертирование неудалось! Образ повреждён!</string>
+		<string name="dynamic_convert_rw_success">{1} был успешно конвертирован в r/w!</string>
+		<string name="dynamic_convert_rw_fail">Конвертирование неудалось!</string>
 	</resources>
 </language>

@@ -1802,7 +1802,7 @@ void TWFunc::SetPerformanceMode(bool mode)
   usleep(500000);
 }
 
-std::string TWFunc::to_string(unsigned long value)
+std::string TWFunc::to_string(unsigned long long value)
 {
   std::ostringstream os;
   os << value;

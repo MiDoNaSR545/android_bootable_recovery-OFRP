@@ -2848,7 +2848,7 @@ void TWPartitionManager::Get_Partition_List(string ListType,
 		}
 	} else if (ListType == "flashimg") {
 		for (iter = Partitions.begin(); iter != Partitions.end(); iter++) {
-			if ((*iter)->Can_Flash_Img && (*iter)->Is_Present) {
+			if (((*iter)->Can_Flash_Img && (*iter)->Is_Present) || (*iter)->Is_Super_Flash) {
 				struct PartitionList part;
 				part.Display_Name = (*iter)->Backup_Display_Name;
 				part.Mount_Point = (*iter)->Backup_Path;
@@ -4550,7 +4550,7 @@ void TWPartitionManager::Setup_Super_Partition() {
 
 	for (auto partition: Super_Partition_List) {
 		TWPartition* part_iter = Find_Partition_By_Path("/" + partition);
-		
+
 		if (part_iter != NULL && part_iter->Is_Present) {
 			superPartition->Backup_Display_Name = superPartition->Backup_Display_Name + partition;
 			if ((orig_list_size - list_size) == max_display_size) {
@@ -4770,5 +4770,68 @@ void TWPartitionManager::Update_data_props(void) {
 
 	if (ven) ven->UnMount(true);
 	if (odm) odm->UnMount(true);
+}
+
+bool TWPartitionManager::Resize_Super_Volume(TWPartition* twrpPart, unsigned long long image_size) {
+	std::string part_name = twrpPart->Super_Volume_Name;
+	std::string lptools_binary = "/system/bin/lptools";
+	bool remove_other_dynamic = DataManager::GetIntValue("tw_dynamic_flash_clean") ? true : false;
+	vector<string> dynamic_to_remove { "system_ext", "product", "my_bigball", "my_carrier", "my_company", "my_engineering", "my_heytap", "my_manifest", "my_preload", "my_product", "my_region", "my_stock" }; 
+
+
+	if (TWFunc::Path_Exists(lptools_binary)) {
+		std::string command, super_free_size;
+		command = lptools_binary + " free | grep -o '[[:digit:]]*' | tr -d '\n'";
+		TWFunc::Exec_Cmd(command, super_free_size);
+		LOGINFO("Free space in super partition: '%llu' , image size: '%llu'\n", stoull(super_free_size.c_str()) + twrpPart->Size, image_size);
+
+		bool is_enough_space = ((stoull(super_free_size.c_str()) + twrpPart->Size) >= image_size) ? true : false;
+
+		if (!is_enough_space && remove_other_dynamic) {
+			gui_warn("dynamic_remove_other=Removing unnecessary for GSI dynamic partitions...");
+			for (auto partition: dynamic_to_remove) {
+					command = lptools_binary + " remove " + partition;
+					TWFunc::Exec_Cmd(command, false);
+			}
+			is_enough_space = true;
+		}
+
+		if (is_enough_space) {
+			command = lptools_binary + " remove " + part_name;
+			TWFunc::Exec_Cmd(command, false);
+
+			command = lptools_binary + " create " + part_name + " " + TWFunc::to_string(image_size);
+			LOGINFO("Creating command: '%s'\n", command.c_str());
+			TWFunc::Exec_Cmd(command);
+
+			command = lptools_binary + " unmap " + part_name;
+			TWFunc::Exec_Cmd(command);
+
+			command = lptools_binary + " map " + part_name + " | grep -oE '/dev/block/[^ ]*' | tr -d '\n'";
+			twrpPart->Primary_Block_Device = "";
+			TWFunc::Exec_Cmd(command, twrpPart->Primary_Block_Device);
+
+			LOGINFO("New block device for '%s': '%s'\n", part_name.c_str(), twrpPart->Primary_Block_Device.c_str());
+
+			twrpPart->Find_Actual_Block_Device();
+			twrpPart->Find_Partition_Size();
+			if (image_size > twrpPart->Size) {
+				gui_err("dynamic_flash_fail=Resizing failed!");
+				return false;
+			}
+			gui_msg(Msg("dynamic_flash_success={1} partition has been successfully resized!")(part_name));
+			return true;
+		} else {
+			if (remove_other_dynamic) {
+				gui_err("dynamic_flash_nospace=Resizing failed. Not enough space in super partition!");
+			} else {
+				gui_err("dynamic_flash_nospace_remove=Resizing failed. Not enough space in super partition! Try to enable GSI flash mode.");
+			}
+			return false;
+		}
+	} else {
+		gui_err("dynamic_flash_nolptools=Resizing failed. Cannot find lptools!");
+		return false;
+	}
 }
 //*
