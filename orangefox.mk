@@ -597,15 +597,6 @@ else
     LOCAL_CFLAGS += -DOF_DEFAULT_TIMEZONE='"CET-1;CEST,M3.5.0,M10.5.0"'
 endif
 
-# support fs compression (requires kernel support and appropriate fstab flags)
-ifeq ($(TW_ENABLE_FS_COMPRESSION),true)
-  OF_ENABLE_FS_COMPRESSION := 1
-endif
-
-ifeq ($(OF_ENABLE_FS_COMPRESSION),1)
-    LOCAL_CFLAGS += -DOF_ENABLE_FS_COMPRESSION
-endif
-
 # some mtk devices will need this, consequent upon recent build system commits
 ifeq ($(OF_FORCE_USE_RECOVERY_FSTAB),1)
     LOCAL_CFLAGS += -DOF_FORCE_USE_RECOVERY_FSTAB

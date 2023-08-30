@@ -169,7 +169,6 @@ enum TW_FSTAB_FLAGS {
 	TWFLAG_WRAPPEDKEY,
 	TWFLAG_ADOPTED_MOUNT_DELAY,
 	TWFLAG_DM_USE_ORIGINAL_PATH,
-	TWFLAG_FS_COMPRESS,
 	TWFLAG_LOGICAL,
 };
 
@@ -220,7 +219,6 @@ const struct flag_list tw_flags[] = {
 	{ "wrappedkey",             TWFLAG_WRAPPEDKEY },
 	{ "adopted_mount_delay=",   TWFLAG_ADOPTED_MOUNT_DELAY },
 	{ "dm_use_original_path",   TWFLAG_DM_USE_ORIGINAL_PATH },
-	{ "fscompress",             TWFLAG_FS_COMPRESS },
 	{ "logical",                TWFLAG_LOGICAL },
 	{ 0,                        0 },
 };
@@ -290,7 +288,6 @@ TWPartition::TWPartition() {
 	Adopted_Mount_Delay = 0;
 	Original_Path = "";
 	Use_Original_Path = false;
-	Needs_Fs_Compress = false;
 }
 
 TWPartition::~TWPartition(void) {
@@ -1105,15 +1102,6 @@ void TWPartition::Apply_TW_Flag(const unsigned flag, const char* str, const bool
 			break;
 		case TWFLAG_LOGICAL:
 			Is_Super = true;
-			break;
-		case TWFLAG_FS_COMPRESS:
-			#ifdef OF_ENABLE_FS_COMPRESSION
-				Needs_Fs_Compress = true;
-				LOGINFO("Enabling 'fs compression'\n");
-			#else
-				Needs_Fs_Compress = false;
-				LOGINFO("Ignoring the 'fscompress' fstab flag\n");
-			#endif
 			break;
 		default:
 			// Should not get here
@@ -2614,6 +2602,7 @@ bool TWPartition::Wipe_F2FS() {
 	bool NeedPreserveFooter = true;
 	bool needs_casefold = false;
   	bool needs_projid = false;
+  	bool needs_compression = false;
 
 	Find_Actual_Block_Device();
 	if (!Is_Present) {
@@ -2624,11 +2613,7 @@ bool TWPartition::Wipe_F2FS() {
 
 	needs_casefold = android::base::GetBoolProperty("external_storage.casefold.enabled", false);
     	needs_projid = android::base::GetBoolProperty("external_storage.projid.enabled", false);
-    	if (!Needs_Fs_Compress) {
-    		Needs_Fs_Compress = android::base::GetBoolProperty("vold.has_compress", false);
-    		if (Needs_Fs_Compress)
-			LOGINFO("Enabling 'fs compression' ('vold.has_compress=true')\n");
-    	}
+    	needs_compression = DataManager::GetIntValue(FOX_USE_F2FS_COMPRESSION);
 
 	unsigned long long dev_sz = TWFunc::IOCTL_Get_Block_Size(Actual_Block_Device.c_str());
 	if (!dev_sz)
@@ -2646,7 +2631,7 @@ bool TWPartition::Wipe_F2FS() {
 	if(needs_casefold)
 		f2fs_command += " -O casefold -C utf8";
 
-	if (Needs_Fs_Compress)
+	if(needs_compression)
 		f2fs_command += " -O compression,extra_attr";
 
 	f2fs_command += " " + Actual_Block_Device + " " + dev_sz_str;

@@ -1178,6 +1178,7 @@ void DataManager::SetDefaultValues()
   mData.SetValue(FOX_COMPATIBILITY_DEVICE, FOX_DEVICE);
   mData.SetValue("found_fox_overwriting_rom", 0);
   mData.SetValue("fox_dfe_formatted", "0"); // whether data has been formatted with disable forced encryption enabled
+  mPersist.SetValue(FOX_USE_F2FS_COMPRESSION , "0");
 
   // the canonical current device
   mConst.SetValue("fox_product_device", TWFunc::Fox_Property_Get("ro.product.device"));
