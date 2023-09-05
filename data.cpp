@@ -369,12 +369,14 @@ int DataManager::SaveValues()
   #ifndef OF_DEVICE_WITHOUT_PERSIST
   if (PartitionManager.Mount_By_Path("/persist", false))
     {
+      #ifndef FOX_CUSTOM_FOLDER_FOR_SETTINGS
       mPersist.SetFile(PERSIST_SETTINGS_FILE);
       mPersist.SetFileVersion(FILE_VERSION);
       pthread_mutex_lock(&m_valuesLock);
       mPersist.SaveValues();
       pthread_mutex_unlock(&m_valuesLock);
       LOGINFO("Saved settings file values to %s\n", PERSIST_SETTINGS_FILE);
+      #endif
 
       ofstream file;
 
@@ -651,6 +653,9 @@ void DataManager::update_tz_environment_variables(void)
 
 void DataManager::SetBackupFolder()
 {
+  if (TWFunc::Fox_Property_Get("ro.twrp.fastbootd") == "1") // don't proceed in fastbootd mode
+    return;
+
   string str = GetCurrentStoragePath();
   TWPartition *partition = PartitionManager.Find_Partition_By_Path(str);
   str += "/Fox/BACKUPS/";
@@ -1532,6 +1537,8 @@ int DataManager::GetMagicValue(const string& varName, string& value)
 void DataManager::Output_Version(void)
 {
 #ifndef TW_OEM_BUILD
+	if (TWFunc::Fox_Property_Get("ro.twrp.fastbootd") == "1") // don't proceed in fastbootd mode
+		return;
 	string Path;
 	char version[255];
 
@@ -1582,7 +1589,7 @@ void DataManager::ReadSettingsFile(void)
 #ifndef TW_OEM_BUILD
   // Load up the values for TWRP - Sleep to let the card be ready
   char mkdir_path[255], settings_file[255];
-#ifndef FOX_USE_DATA_RECOVERY_FOR_SETTINGS
+#ifndef FOX_CUSTOM_FOLDER_FOR_SETTINGS
   int is_enc, has_data_media;
 
   GetValue(TW_IS_ENCRYPTED, is_enc);
@@ -1603,7 +1610,7 @@ void DataManager::ReadSettingsFile(void)
 	}
   }
 
-#endif // FOX_USE_DATA_RECOVERY_FOR_SETTINGS
+#endif // FOX_CUSTOM_FOLDER_FOR_SETTINGS
   memset(mkdir_path, 0, sizeof(mkdir_path));
   memset(settings_file, 0, sizeof(settings_file));
   sprintf(mkdir_path, "%s", GetSettingsStoragePath().c_str());
@@ -1618,6 +1625,9 @@ void DataManager::ReadSettingsFile(void)
     }
 
   mkdir(mkdir_path, 0777);
+#ifdef FOX_CUSTOM_FOLDER_FOR_SETTINGS
+  mkdir("/sdcard/Fox", 0777);
+#endif
 
   LOGINFO("Attempt to load settings from settings file...\n");
   LoadValues(settings_file);
@@ -1643,7 +1653,11 @@ string DataManager::GetCurrentPartPath(void)
 
 string DataManager::GetSettingsStoragePath(void)
 {
+  #ifndef FOX_CUSTOM_FOLDER_FOR_SETTINGS
   return GetStrValue("tw_settings_path");
+  #else
+  return Fox_Home;
+  #endif
 }
 
 void DataManager::Vibrate(const string& varName)

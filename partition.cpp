@@ -559,6 +559,12 @@ bool TWPartition::Process_Fstab_Line(const char *fstab_line, bool Display_Error,
 			Backup_Display_Name = Display_Name;
 			Storage_Name = Display_Name;
 		}
+#ifdef FOX_CUSTOM_FOLDER_FOR_SETTINGS
+		else if (Mount_Point == TWFunc::Get_Root_Path(FOX_CUSTOM_FOLDER_FOR_SETTINGS)) {
+			Can_Be_Wiped = false;
+			Wipe_Available_in_GUI = false;
+		}
+#endif
 #ifdef TW_EXTERNAL_STORAGE_PATH
 		if (Mount_Point == EXPAND(TW_EXTERNAL_STORAGE_PATH)) {
 			Is_Storage = true;
@@ -669,7 +675,9 @@ bool TWPartition::Process_Fstab_Line(const char *fstab_line, bool Display_Error,
 		if (mounted || Mount(false)) {
 			// Read the backup settings file
 			#ifndef OF_DEVICE_WITHOUT_PERSIST
+			#ifndef FOX_CUSTOM_FOLDER_FOR_SETTINGS
 			DataManager::LoadPersistValues();
+			#endif
 			DataManager::FindPasswordBackup();
 			#endif
 			TWFunc::Fixup_Time_On_Boot("/persist/time/");

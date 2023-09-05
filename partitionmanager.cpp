@@ -349,9 +349,9 @@ clear:
 	// vendor and odm
 	TWPartition* ven = PartitionManager.Find_Partition_By_Path("/vendor");
 	TWPartition* odm = PartitionManager.Find_Partition_By_Path("/odm");
-	if (ven) ven->Mount(Display_Error);
-	if (odm) odm->Mount(Display_Error);
-	if (ven || odm) {
+	if (recovery_mode && (ven || odm)) {
+		if (ven) ven->Mount(Display_Error);
+		if (odm) odm->Mount(Display_Error);
 		// additional fstab
 		if  (process_additional_fstab) {
 			if (!parse_userdata) {
@@ -2703,7 +2703,11 @@ void TWPartitionManager::Get_Partition_List(string ListType,
     {
       for (iter = Partitions.begin(); iter != Partitions.end(); iter++)
 	{
+#ifdef FOX_CUSTOM_FOLDER_FOR_SETTINGS
+	  if ((*iter)->Can_Be_Mounted && (*iter)->Mount_Point != TWFunc::Get_Root_Path(FOX_CUSTOM_FOLDER_FOR_SETTINGS))
+#else
 	  if ((*iter)->Can_Be_Mounted)
+#endif
 	    {
 	      struct PartitionList part;
 	      part.Display_Name = (*iter)->Display_Name;
@@ -3788,12 +3792,13 @@ int TWPartitionManager::Run_OTA_Survival_Backup(bool adbbackup)
   part_settings.file_bytes = 0;
   part_settings.PM_Method = PM_BACKUP;
   bool DoSystemOnOTA = (DataManager::GetIntValue(FOX_DO_SYSTEM_ON_OTA) != 0);
-
+  
   TWPartition *orangefox = Get_Default_Storage_Partition();
   if (orangefox)
     DataManager::SetValue("tw_storage_path", orangefox->Storage_Path);
   else
     DataManager::SetValue("tw_storage_path", "/");
+
 
   DataManager::GetValue("tw_enable_adb_backup", gui_adb_backup);
   if (gui_adb_backup == true)
@@ -3924,6 +3929,7 @@ int TWPartitionManager::Run_OTA_Survival_Backup(bool adbbackup)
   part_settings.progress = &progress;
 
   storage = Find_Partition_By_Path(DataManager::GetCurrentStoragePath());
+  //storage = Find_Partition_By_Path(DataManager::GetStrValue(FOX_SURVIVAL_FOLDER_VAR));
   if (storage != NULL)
     {
       free_space = storage->Free;
