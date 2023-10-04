@@ -1494,9 +1494,9 @@ int DataManager::GetMagicValue(const string& varName, string& value)
 		#ifdef TW_CUSTOM_BATTERY_PATH
 			string capacity_file = EXPAND(TW_CUSTOM_BATTERY_PATH);
 			capacity_file += "/capacity";
-			FILE * cap = fopen(capacity_file.c_str(),"rt");
+			FILE *cap = fopen(capacity_file.c_str(), "rt");
 		#else
-			FILE * cap = fopen("/sys/class/power_supply/battery/capacity","rt");
+			FILE *cap = fopen("/sys/class/power_supply/battery/capacity", "rt");
 		#endif
 			if (cap) {
 				fgets(cap_s, 4, cap);
@@ -1508,21 +1508,23 @@ int DataManager::GetMagicValue(const string& varName, string& value)
 		#ifdef TW_CUSTOM_BATTERY_PATH
 			string status_file = EXPAND(TW_CUSTOM_BATTERY_PATH);
 			status_file += "/status";
-			cap = fopen(status_file.c_str(),"rt");
+			cap = fopen(status_file.c_str(), "rt");
 		#else
-			cap = fopen("/sys/class/power_supply/battery/status","rt");
+			cap = fopen("/sys/class/power_supply/battery/status", "rt");
 		#endif
 			if (cap) {
 				fgets(cap_s, 2, cap);
 				fclose(cap);
-				if (cap_s[0] == 'C')
+				if (cap_s[0] == 'C') {
 					charging = '+';
-				else
+					DataManager::SetValue("charging_now", "1");
+				} else {
 					charging = ' ';
+					DataManager::SetValue("charging_now", "0");
+				}
 			}
-			nextSecCheck = curTime.tv_sec + 60;
+			nextSecCheck = curTime.tv_sec + 1;
 		}
-
 		if (varName == "tw_battery_charge")
 			sprintf(tmp, "%i%%%c", lastVal, charging);
 		else
